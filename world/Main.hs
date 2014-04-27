@@ -3,7 +3,7 @@
 
 module Main where
 
-import CommandParsing
+import Game.CommandParsing
 
 main :: IO()
 main = putStrLn $ parseCommand "Hello World"
