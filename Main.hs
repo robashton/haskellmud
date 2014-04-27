@@ -3,8 +3,9 @@
 
 module Main where
 
+import CommandParsing
 
 main :: IO()
-main = putStrLn "Hello World"
+main = putStrLn $ parseCommand "Hello World"
 
 
