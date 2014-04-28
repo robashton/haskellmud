@@ -5,20 +5,22 @@ module Game.CommandParsing where
 data Verb = Take
           | Go
           | Move
-          deriving Show
+          deriving (Show, Eq)
 
 data Direction = North
                | West
                | South
                | East
-               deriving Show
+               deriving (Show, Eq)
 
 data Noun = Noun String
-          deriving Show
+          deriving (Show, Eq)
 
 data Command = Command { verb :: Verb,
                          noun :: Noun }
+                         deriving (Show, Eq)
+
 
 parseCommand :: String -> Command
-parseCommand _ = Command Take (Noun "Axe")
+parseCommand _ = Command Take (Noun "axe")
 
