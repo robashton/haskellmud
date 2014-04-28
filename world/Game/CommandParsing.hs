@@ -1,6 +1,6 @@
 module Game.CommandParsing where
 
---import Control.Applicative
+import Data.Char
 
 data Verb = Take
           | Go
@@ -20,7 +20,19 @@ data Command = Command { verb :: Verb,
                          noun :: Noun }
                          deriving (Show, Eq)
 
+parseVerb :: String -> Verb
+parseVerb v =
+    case v of
+      "take" -> Take
+      "go" -> Go
+      "move" -> Move
+      _ -> Take
+
+parseNoun :: String -> Noun
+parseNoun n = Noun n
 
 parseCommand :: String -> Command
-parseCommand _ = Command Take (Noun "axe")
+parseCommand input =
+    let (v, (' ':rest)) = break isSpace input
+    in Command (parseVerb v) (parseNoun rest)
 
