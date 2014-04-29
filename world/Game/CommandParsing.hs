@@ -2,37 +2,45 @@ module Game.CommandParsing where
 
 import Data.Char
 
-data Verb = Take
-          | Go
-          | Move
-          deriving (Show, Eq)
-
 data Direction = North
                | West
                | South
                | East
                deriving (Show, Eq)
 
-data Noun = Noun String
-          deriving (Show, Eq)
+type Noun = String
 
-data Command = Command { verb :: Verb,
-                         noun :: Noun }
-                         deriving (Show, Eq)
+data Command = Take Noun
+             | Move Direction
+             | Nope
+             deriving (Show, Eq)
 
-parseVerb :: String -> Verb
-parseVerb v =
-    case v of
-      "take" -> Take
-      "go" -> Go
-      "move" -> Move
-      _ -> Take
+data ParseResult t = ParseResult (t, String)
+                   | Fail
 
-parseNoun :: String -> Noun
-parseNoun n = Noun n
+
+parseNoun :: String -> (ParseResult Noun)
+parseNoun input = ParseResult (input, "")
+
+parseDirection :: String -> (ParseResult Direction)
+parseDirection input = case map toLower input of
+                         "north" -> ParseResult (North, "")
+                         "west" -> ParseResult (West, "")
+                         "east" -> ParseResult (East, "")
+                         "south" -> ParseResult (South, "")
+                         _ -> Fail
 
 parseCommand :: String -> Command
 parseCommand input =
     let (v, (' ':rest)) = break isSpace input
-    in Command (parseVerb v) (parseNoun rest)
+    in case map toLower v of
+         "take" -> case parseNoun rest of
+                     ParseResult (n, _) -> Take n
+                     _ -> Nope
+         "go" -> case parseDirection rest of
+                   ParseResult (d, _) -> Move d
+                   _ -> Nope
+         _ -> Nope
+
+
 
