@@ -19,8 +19,20 @@ data ParseResult t = ParseResult (t, String)
                    | Fail
 
 
+isStopWord :: String -> Bool
+isStopWord word = word `elem` [ "the", "is", "a" ]
+
+consumeStopWords :: String -> String
+consumeStopWords input =
+    -- Note: We don't always have a space, deal with this.
+    let (w, (' ':rest)) = break isSpace input
+    in case isStopWord(w) of
+         False -> input
+         True -> consumeStopWords(rest)
+
+
 parseNoun :: String -> (ParseResult Noun)
-parseNoun input = ParseResult (input, "")
+parseNoun input = ParseResult (consumeStopWords input, "")
 
 parseDirection :: String -> (ParseResult Direction)
 parseDirection input = case map toLower input of
